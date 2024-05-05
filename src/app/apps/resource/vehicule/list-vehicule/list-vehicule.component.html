@@ -1,0 +1,119 @@
+<nz-card>
+    <div class="row m-b-30">
+        <div class="col-lg-8">
+            <div class="d-md-flex">
+                <div class="m-b-10 m-r-20">
+                    <nz-input-group [nzPrefix]="prefixTemplate">
+                        <input type="text" nz-input placeholder="Search Project" [(ngModel)]="searchInput"
+                            (ngModelChange)="search()">
+                    </nz-input-group>
+                    <ng-template #prefixTemplate>
+                        <i nz-icon nzType="search" class="opacity-05"></i>
+                    </ng-template>
+                </div>
+                <div class="m-b-10 m-r-20 d-flex align-items-center">
+                    <nz-select style="min-width: 220px;" class="w-100" nzPlaceHolder="Status">
+                        <nz-option nzLabel="All" nzValue="all"></nz-option>
+                        <nz-option nzLabel="Approved" nzValue="approved"></nz-option>
+                        <nz-option nzLabel="Pending" nzValue="pending"></nz-option>
+                        <nz-option nzLabel="Rejected" nzValue="rejected"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 text-right">
+            <button nz-button nzType="primary" (click)="showNewProject(newProjectContent)">
+                <i nz-icon nzType="plus"></i>
+                <span>New Vehicule</span>
+            </button>
+            <ng-template #newProjectContent>
+                <form nz-form nzLayout="vertical" [formGroup]="vehiculeForm" (ngSubmit)="submitForm()">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <nz-form-item>
+                                <nz-form-label>Name</nz-form-label>
+                                <nz-form-control nzErrorTip="Please input your Name!">
+                                    <nz-form-control>
+                                        <input type="text" formControlName="name" nz-input placeholder="Name">
+                                    </nz-form-control>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-md-4">
+                            <nz-form-item>
+                                <nz-form-label>Matricule</nz-form-label>
+                                <nz-form-control nzErrorTip="Please input your Matricule!">
+                                    <nz-form-control>
+                                        <input type="text" formControlName="matricule" nz-input placeholder="Matricule">
+                                    </nz-form-control>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-md-4">
+                            <nz-form-item>
+                                <nz-form-label>Status</nz-form-label>
+                                <nz-form-control nzErrorTip="Please input your localisation!">
+                                    <nz-form-control>
+                                        <nz-select class="w-100" formControlName="status" nzPlaceHolder="Status">
+                                            <nz-option nzValue="Pending" nzLabel="Pending"></nz-option>
+                                            <nz-option nzValue="In Breakdown" nzLabel="In Breakdown"></nz-option>
+                                            <nz-option nzValue="On Mission" nzLabel="On Mission"></nz-option>
+
+                                        </nz-select>
+                                    </nz-form-control>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                    <nz-form-item>
+                        <nz-form-label>Description</nz-form-label>
+                        <nz-form-control nzErrorTip="Please input your description!">
+                            <nz-form-control>
+                                <textarea formControlName="description" nz-input></textarea>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <button nz-button class="login-form-button" [nzType]="'primary'" type="submit">Create</button>
+                </form>
+            </ng-template>
+        </div>
+    </div>
+    <nz-table #vehiculesListTable [nzData]="vehiculeList">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Matricule</th>
+                <th>Status</th>
+                <th>Create at</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of vehiculesListTable.data;  let i=index">
+                
+                <td>
+                    <div class="d-flex align-items-center">
+                        <h6 class="m-l-10 m-b-0">{{item.name}}</h6>
+                    </div>
+                </td>
+                <td>{{item.description}}</td>
+                <td>{{item.matricule}}</td>
+                <td>
+                    <nz-badge *ngIf="item.status == 'Pending'" nzStatus="success"></nz-badge>
+                    <nz-badge *ngIf="item.status == 'In Breakdown'" nzStatus="error"></nz-badge>
+                    <nz-badge *ngIf="item.status == 'On Mission'" nzStatus="processing"></nz-badge>
+                    <span class="text-capitalize">{{item.status}}</span>
+                </td>
+                <td>{{item.createdAt|date:'dd-MM-yyyy'}}</td>
+                <td class="text-md-right">
+                    <a class="m-r-5" nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Edit">
+                        <i nz-icon nzType="edit" theme="outline"></i>
+                    </a>
+                    <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Delete">
+                        <i nz-icon nzType="delete" theme="outline"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>

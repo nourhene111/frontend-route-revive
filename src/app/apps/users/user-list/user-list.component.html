@@ -1,0 +1,46 @@
+<div class="page-header">
+    <div class="row align-items-md-center">
+        <div class="col-md-6">
+            <div class="media m-v-10">
+                <nz-avatar nzIcon="star" [nzSize]="40" [nzShape]="'square'" class="ant-avatar-cyan"></nz-avatar>
+                <div class="media-body m-l-15">
+                    <h6 class="mb-0">All Users ({{userList.length}})</h6>
+                 </div>
+            </div>
+        </div>
+     
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-11 mx-auto">
+        <!-- Card View -->
+        
+        <!-- List View -->
+        <nz-card  >
+            <nz-table #listViewTable [nzData]="userList">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Create Date</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of listViewTable.data">
+                        <td><span class="text-gray">{{item.firstName}} {{item.lastName}}</span></td>
+                        <td><span class="text-gray">{{item.email}}</span></td>
+                        <td><span class="text-gray">{{item.phone}}</span></td>
+                        <td><span class="text-gray">{{item.Role}}</span></td>
+                        
+                         
+                        <td><span class="text-gray">{{item.createdAt | date:'yyyy-MM-dd'}}</span></td>
+                        
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-card>
+    </div>
+</div>
