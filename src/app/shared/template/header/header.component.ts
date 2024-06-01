@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ThemeConstantService } from '../../services/theme-constant.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
+import { NotifService } from '../../services/socketService.service';
 
 @Component({
     selector: 'app-header',
@@ -12,12 +13,34 @@ export class HeaderComponent{
 
     searchVisible : boolean = false;
     quickViewVisible : boolean = false;
-    isFolded : boolean;
-    isExpand : boolean;
-
-    constructor( private themeService: ThemeConstantService,private router:Router,private authService:AuthenticationService) {}
+    isFolded : boolean=false;
+    isExpand : boolean=false;
+    userInfo:any
+     notif=0;
+     role:string =''
+    notificationList :any= [];
+    constructor( 
+        private srv:NotifService,
+        private themeService: ThemeConstantService,private router:Router,private authService:AuthenticationService) {}
 
     ngOnInit(): void {
+        this.authService.getRoleValue().subscribe(res=>{
+            this.role=res
+        })
+        this.srv.listen('dataUpdate').subscribe((res:any)=>{
+            console.log(res);
+            this.notif++;
+            this.notificationList.unshift(JSON.parse(res))
+            console.log(this.notificationList);
+            
+        })
+
+        this.authService.getCurrentUserValue().subscribe(res=>{
+            console.log(res);
+            
+            this.userInfo=res
+            
+        })
         this.themeService.isMenuFoldedChanges.subscribe(isFolded => this.isFolded = isFolded);
         this.themeService.isExpandChanges.subscribe(isExpand => this.isExpand = isExpand);
     }
@@ -42,32 +65,7 @@ export class HeaderComponent{
         this.quickViewVisible = !this.quickViewVisible;
     }
 
-    notificationList = [
-        {
-            title: 'You received a new message',
-            time: '8 min',
-            icon: 'mail',
-            color: 'ant-avatar-' + 'blue'
-        },
-        {
-            title: 'New user registered',
-            time: '7 hours',
-            icon: 'user-add',
-            color: 'ant-avatar-' + 'cyan'
-        },
-        {
-            title: 'System Alert',
-            time: '8 hours',
-            icon: 'warning',
-            color: 'ant-avatar-' + 'red'
-        },
-        {
-            title: 'You have a new update',
-            time: '2 days',
-            icon: 'sync',
-            color: 'ant-avatar-' + 'gold'
-        }
-    ];
+ 
 
     logout(){
         this.router.navigate(['/authentication/login'])

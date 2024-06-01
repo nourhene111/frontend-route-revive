@@ -20,6 +20,9 @@ import { ThemeConstantService } from './shared/services/theme-constant.service';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './shared/interceptor/token.interceptor';
+import { FooterSComponent } from './site/footer-s/footer-s.component';
+import { HeaderSComponent } from './site/header-s/header-s.component';
+ 
 
 registerLocaleData(en);
 
@@ -27,7 +30,10 @@ registerLocaleData(en);
     declarations: [
         AppComponent,
         CommonLayoutComponent,
-        FullLayoutComponent
+        FullLayoutComponent,
+        HeaderSComponent,
+         FooterSComponent     
+        
     ],
     imports: [
         BrowserModule,

@@ -18,13 +18,14 @@ export class SignUp2Component {
             this.signUpForm.controls[ i ].markAsDirty();
             this.signUpForm.controls[ i ].updateValueAndValidity();
         }
-
+        if(this.signUpForm.valid){
         this.authService.register(this.signUpForm.value).subscribe(res=>{
             this.router.navigate(['/authentication/login'])
         },((error)=>{
             this.message.error(error.error)
        }))
     }
+}
 
     updateConfirmValidator(): void {
         Promise.resolve().then(() => this.signUpForm.controls.checkPassword.updateValueAndValidity());
@@ -48,7 +49,7 @@ export class SignUp2Component {
             email            : [ null, [ Validators.required ] ],
             password         : [ null, [ Validators.required ] ],
             checkPassword    : [ null, [ Validators.required, this.confirmationValidator ] ],
-            phone    : [ null, [ Validators.required ] ],
+            phone    : [ null, [ Validators.required , Validators.minLength(8)] ],
          });
     }
 }    

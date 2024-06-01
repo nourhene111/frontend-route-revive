@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { distinctUntilChanged, filter, map, startWith } from "rxjs/operators";
 import { IBreadcrumb } from "../../shared/interfaces/breadcrumb.type";
 import { ThemeConstantService } from '../../shared/services/theme-constant.service';
+import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 
 @Component({
     selector: 'app-common-layout',
@@ -18,8 +19,11 @@ export class CommonLayoutComponent  {
     isSideNavDark : boolean;
     isExpand: boolean;
     selectedHeaderColor: string;
+    role:string
 
-    constructor(private router: Router,  private activatedRoute: ActivatedRoute, private themeService: ThemeConstantService) {
+    constructor(
+        private authService:AuthenticationService,
+        private router: Router,  private activatedRoute: ActivatedRoute, private themeService: ThemeConstantService) {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
             map(() => {
@@ -41,6 +45,7 @@ export class CommonLayoutComponent  {
     }
 
     ngOnInit() {
+       this.role=localStorage.getItem('role')
         this.breadcrumbs$ = this.router.events.pipe(
             startWith(new NavigationEnd(0, '/', '/')),
             filter(event => event instanceof NavigationEnd),distinctUntilChanged(),

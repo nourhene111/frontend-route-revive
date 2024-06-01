@@ -6,7 +6,7 @@
             <div class="col-md-6">
                 <nz-form-item>
                     <nz-form-label>FirstName</nz-form-label>
-                    <nz-form-control>
+                    <nz-form-control nzErrorTip="Please input your FirstName!">
                         <input nz-input formControlName="firstName" placeholder="FirstName" value="Marshall Nichols">
                     </nz-form-control>
                 </nz-form-item>
@@ -14,7 +14,7 @@
             <div class="col-md-6">
                 <nz-form-item>
                     <nz-form-label>LastName</nz-form-label>
-                    <nz-form-control>
+                    <nz-form-control nzErrorTip="Please input your LastName!">
                         <input nz-input formControlName="lastName" placeholder="LastName" type="text" value="@marshallnich">
                     </nz-form-control>
                 </nz-form-item>
@@ -24,7 +24,7 @@
             <div class="col-md-4">
                 <nz-form-item>
                     <nz-form-label>Email</nz-form-label>
-                    <nz-form-control>
+                    <nz-form-control nzErrorTip="Please input your email!">
                         <input formControlName="email" type="email" nz-input placeholder="Email" >
                     </nz-form-control>
                 </nz-form-item>
@@ -32,7 +32,7 @@
             <div class="col-md-4">
                 <nz-form-item>
                     <nz-form-label>Phone</nz-form-label>
-                    <nz-form-control>
+                    <nz-form-control nzErrorTip="Please input valid Phone!"> 
                         <input nz-input formControlName="phone" type="text" placeholder="Phone Number" >
                          </nz-form-control>
                 </nz-form-item>
@@ -40,7 +40,7 @@
             <div class="col-md-4">
                 <nz-form-item>
                     <nz-form-label>Role</nz-form-label>
-                    <nz-form-control>
+                    <nz-form-control nzErrorTip="Please input your Role!">
                         <nz-select class="w-100"  formControlName="role" nzPlaceHolder="Role">
                             <nz-option nzValue="User" nzLabel="User"></nz-option>
                             <nz-option nzValue="Admin" nzLabel="Admin"></nz-option>
@@ -54,9 +54,9 @@
 
         <div class="row">
             <div class="col-md-6">
-                <nz-form-item>
+                <nz-form-item nzErrorTip="Please input your Password!">
                     <nz-form-label>Password</nz-form-label>
-                    <nz-form-control>
+                    <nz-form-control   nzErrorTip="Please input your Password!">
                         <input type="password" formControlName="password" nz-input placeholder="password" >
                     </nz-form-control>
                 </nz-form-item>
@@ -64,7 +64,7 @@
             <div class="col-md-6">
                 <nz-form-item>
                     <nz-form-label>Confirm password</nz-form-label>
-                    <nz-form-control>
+                    <nz-form-control nzErrorTip="Please confirm your password!">
                         <input nz-input placeholder="confirm Password" formControlName="confirmPassword" type="password" value="@marshallnich">
                     </nz-form-control>
                 </nz-form-item>

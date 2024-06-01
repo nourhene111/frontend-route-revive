@@ -15,7 +15,7 @@
         <div class="col-md-6">
             <div class="text-md-right m-v-10">
                 
-                <button nz-button nzType="primary" (click)="showNewProject(newProjectContent)" *ngIf="role=='User'">
+                <button nz-button nzType="primary" (click)="showNewProject(newProjectContent)"  *ngIf="role!='Admin'">
                     <i nz-icon nzType="plus"></i>
                     <span>New Demande</span>
                 </button>  
@@ -49,7 +49,7 @@
                             <img [src]="img" alt="" width="100%">
                         </ng-container>
                         
-                        <button nz-button class="login-form-button" [nzType]="'primary'">Sign In</button>
+                        <button nz-button class="login-form-button" [nzType]="'primary'">Create</button>
                     </form>
                 </ng-template>
             </div>
@@ -63,8 +63,8 @@
             <thead>
                 <tr>
                     <th>Localisation</th>
-                    <th>Description</th>
-                    <th>User</th>
+                    <th>Priorite</th>
+                     <th>User</th>
                     <th>Date de creation</th>
                     <th class="text-center">Status</th>
                     <th></th>
@@ -79,7 +79,7 @@
                             </div>
                         </div>
                     </td>
-                    <td>   {{item.description}}</td>
+                    <td>   {{item.priorite ? item.priorite :'----'}}</td>
                     
                     <td>{{item.user.firstName}}  {{item.user.lastName}}</td>
                     <td>   {{item.createdAt |date:'dd-MM-yyyy HH:mm:ss'}}</td>
@@ -91,29 +91,10 @@
                    
                     </td>
                     <td class="text-right">
-                        <div>
-                            <a class="text-gray font-size-18" nz-dropdown nzPlacement="bottomRight" nzTrigger="click" [nzDropdownMenu]="projectListSetting2">
-                                    <i nz-icon nzType="ellipsis" theme="outline"></i>
-                                </a>
-                                <nz-dropdown-menu #projectListSetting2="nzDropdownMenu">
-                                    <ul nz-menu nzSelectable>
-                                        <li nz-menu-item>
-                                            <a [routerLink]="['/apps/demande-details', item.id]">
-                                                <i nz-icon nzType="eye" theme="outline"></i>
-                                                <span class="m-l-10">View</span>
-                                            </a>
-                                        </li>
-                                         
-                                        <li nz-menu-divider></li>
-                                        <li nz-menu-item>
-                                            <a>
-                                                <i nz-icon nzType="delete" theme="outline"></i>
-                                                <span class="m-l-10">Delete</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nz-dropdown-menu>
-                        </div>
+                        <a [routerLink]="['/apps/demande-details', item.id]">
+                            <i nz-icon nzType="eye" theme="outline"></i>
+                            <span class="m-l-10">View</span>
+                        </a>
                     </td>
                 </tr>
             </tbody>

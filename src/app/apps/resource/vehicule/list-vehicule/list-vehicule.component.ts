@@ -58,10 +58,17 @@ export class ListVehiculeComponent implements OnInit {
   }
 
   submitForm() {
+    for (const i in this.vehiculeForm.controls) {
+      this.vehiculeForm.controls[ i ].markAsDirty();
+      this.vehiculeForm.controls[ i ].updateValueAndValidity();
+  
+  }
+  if(this.vehiculeForm.valid){
     this.resourceService.createVehicule(this.vehiculeForm.value).subscribe(res => {
-      this.message.success('User create Successfully')
+      this.message.success('Vehicule create Successfully')
       this.getVehiculeList()
       this.modalService.closeAll()
     })
   }
+}
 }    

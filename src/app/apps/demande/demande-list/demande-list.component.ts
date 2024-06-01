@@ -76,7 +76,7 @@ export class DemandeListComponent implements OnInit {
     }
 
   this.demandeService.createDemande({data:this.demandeForm.value,file:this.file}).subscribe(res=>{
-this.getMyDemande()
+this.getAllDemande()
 this.modalService.closeAll()
    }) 
 }
