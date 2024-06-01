@@ -3,12 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DemandeService } from 'src/app/shared/services/demande.service';
 import { PlanificationService } from 'src/app/shared/services/planification.Service';
-import { ResourceService } from 'src/app/shared/services/resource.service';
+import { ResourceService } from './../../../shared/services/resource.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 
 @Component({
-  selector: 'app-demande-details',
-  templateUrl: './demande-details.component.html',
-  styles: [`
+    selector: 'app-demande-details',
+    templateUrl: './demande-details.component.html',
+    styles: [`
   :host ::ng-deep .ant-tabs-nav-wrap {
      padding: 0px 25px;
   }
@@ -18,212 +20,163 @@ import { ResourceService } from 'src/app/shared/services/resource.service';
   }
 `]
 })
-export class DemandeDetailsComponent   {
-    equipeList:any
-    equipementList:any
-    vehiculeList:any
+export class DemandeDetailsComponent {
+    equipeList: any
+    equipementList: any
+    vehiculeList: any
+    demande: any
+    selectedPriority: string
+    checked: boolean = false;
+    vehiculeID:number
+    equipeID:number
+    equipementID:number
+    id: number
+    role:string=''
+    constructor(
+        private router: ActivatedRoute, private demandeService: DemandeService,
+        private resourceService: ResourceService,
+        private planificationService: PlanificationService,
+        private message: NzMessageService,private authenticationService:AuthenticationService
+    ) { }
 
-    demande:any
-    selectedPriority:string
-  checked: boolean = false; 
-  constructor(private router:ActivatedRoute,private demandeService:DemandeService,
-    private resourceService:ResourceService,private planificationService:PlanificationService,
-    private message: NzMessageService
-){}
-
-  ngOnInit(): void {
-    this.router.params.subscribe((res:any)=>{
-        this.getDemandeDetails(res.id)
+    ngOnInit(): void {
         
-    })
-    
-  }
-
-  getEquipeList(){
-
-    this.resourceService.getPendingEquipe().subscribe(res=>{
-        this.equipeList=res
-    })
-
-  }
-
-  getEquipementList(){
-
-  }
-
-
-  getVehiculeList(){
-
-  }
-
-  getDemandeDetails(id){
-   this.demandeService.getDemandeDetails(id).subscribe(res=>{
-    this.demande=res
-    this.selectedPriority=this.demande?.priorite
+   this.authenticationService.getRoleValue().subscribe(res=>{
+    console.log(res);
+    this.role=res
     
    })
-  }
 
-  onChangePriority(){
-    console.log(this.selectedPriority);
+        this.router.params.subscribe((res: any) => {
+            this.id = res.id
 
-    this.planificationService.updatePeriority(this.demande.id,this.selectedPriority).subscribe(res=>{
-        this.message.success("Preiority updated") 
+            this.getPlanification(res.id)
 
-    })
-    
-  }
-  
+        })
+        this.getEquipeList()
+        this.getEquipementList()
+        this.getVehiculeList()
+    }
 
-  memberList = [
-      {
-          name: 'Erin Gonzales',
-          avatar: 'assets/images/avatars/thumb-1.jpg'
-      },
-      {
-          name: 'Darryl Day',
-          avatar: 'assets/images/avatars/thumb-2.jpg'
-      },
-      {
-          name: 'Marshall Nichols',
-          avatar: 'assets/images/avatars/thumb-3.jpg'
-      },
-      {
-          name: 'Virgil Gonzales',
-          avatar: 'assets/images/avatars/thumb-4.jpg'
-      },
-      {
-          name: 'Riley Newman',
-          avatar: 'assets/images/avatars/thumb-6.jpg'
-      },
-      {
-          name: 'Pamela Wanda',
-          avatar: 'assets/images/avatars/thumb-7.jpg'
-      }
-  ]
+    getEquipeList() {
+        this.planificationService.getPlanificationDemande(this.id).subscribe((result: any) => {
+            console.log(result);
+            this.resourceService.getAllEquipe().subscribe((res: any) => {
+                console.log(res);
 
-  taskList = [
-      {
-          task: "Irish skinny, grinder affogato",
-          checked: false
-      },
-      {
-          task: "Let us wax poetic about the beauty of the cheeseburger.",
-          checked: false
-      },
-      {
-          task: "I'm gonna build me an airport",
-          checked: false
-      },
-      {
-          task: "Efficiently unleash cross-media information",
-          checked: true
-      },
-      {
-          task: "Here's the story of a man named Brady",
-          checked: true
-      },
-      {
-          task: "Bugger bag egg's old boy willy jolly",
-          checked: true
-      },
-      {
-          task: "Hand-crafted exclusive finest tote bag Ettinger",
-          checked: true
-      },
-      {
-          task: "I'll be sure to note that in my log",
-          checked: true
-      }
-  ]
+                console.log(res[0].id === result.demande.equipeID);
 
-  fileList = [
-      {
-          name: "Mockup.zip",
-          size: "7 MB",
-          type: "zip"        
-      },
-      {
-          name: "Guideline.doc",
-          size: "128 KB",
-          type: "doc"        
-      },
-      {
-          name: "Logo.png",
-          size: "128 KB",
-          type: "image"        
-      }
-  ];
+                this.equipeList = res.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    checked: item.id === result.equipe
+                }));
+                console.log(this.equipeList);
 
-  activityList = [
-      {
-          name: "Virgil Gonzales",
-          avatar: "assets/images/avatars/thumb-4.jpg",
-          date: "10:44 PM",
-          action: "Complete task",
-          target: "Prototype Design",
-          actionType: "completed"
-      },
-      {
-          name: "Lilian Stone",
-          avatar: "assets/images/avatars/thumb-8.jpg",
-          date: "8:34 PM",
-          action: "Attached file",
-          target: "Mockup Zip",
-          actionType: "upload"
-      },
-      {
-          name: "Erin Gonzales",
-          avatar: "assets/images/avatars/thumb-1.jpg",
-          date: "8:34 PM",
-          action: "Commented",
-          target: "'This is not our work!'",
-          actionType: "comment"
-      },
-      {
-          name: "Riley Newman",
-          avatar: "assets/images/avatars/thumb-6.jpg",
-          date: "8:34 PM",
-          action: "Commented",
-          target: "'Hi, please done this before tommorow'",
-          actionType: "comment"
-      },
-      {
-          name: "Pamela Wanda",
-          avatar: "assets/images/avatars/thumb-7.jpg",
-          date: "8:34 PM",
-          action: "Removed",
-          target: "a file",
-          actionType: "removed"
-      },
-      {
-          name: "Marshall Nichols",
-          avatar: "assets/images/avatars/thumb-3.jpg",
-          date: "5:21 PM",
-          action: "Create",
-          target: "this project",
-          actionType: "created"
-      }
-  ]
+            })
 
-  commentList = [
-      {
-          name: 'Lillian Stone',
-          img: 'assets/images/avatars/thumb-8.jpg',
-          date: '28th Jul 2018',
-          review: 'The palatable sensation we lovingly refer to as The Cheeseburger has a distinguished and illustrious history. It was born from humble roots, only to rise to well-seasoned greatness.'
-      },
-      {
-          name: 'Victor Terry',
-          img: 'assets/images/avatars/thumb-9.jpg',
-          date: '28th Jul 2018',
-          review: 'The palatable sensation we lovingly refer to as The Cheeseburger has a distinguished and illustrious history. It was born from humble roots, only to rise to well-seasoned greatness.'
-      },
-      {
-          name: 'Wilma Young',
-          img: 'assets/images/avatars/thumb-10.jpg',
-          date: '28th Jul 2018',
-          review: 'The palatable sensation we lovingly refer to as The Cheeseburger has a distinguished and illustrious history. It was born from humble roots, only to rise to well-seasoned greatness.'
-      }
-  ]
+        })
+    }
+    isChecked(item) {
+        return true
+    }
+    toggleChecked(item: any): void {
+        item.checked = !item.checked;
+    }
+    getEquipementList() {
+        this.planificationService.getPlanificationDemande(this.id).subscribe((result: any) => {
+            console.log(result);
+            this.resourceService.getAllEquipement().subscribe((res:any) => {
+                console.log(res);
+               
+                this.equipementList = res.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    checked: item.id === result.equipement
+                }));
+            })
+
+        })
+    }
+
+   
+
+
+    getVehiculeList() {
+        
+   
+
+        this.planificationService.getPlanificationDemande(this.id).subscribe((result: any) => {
+            console.log(result);
+            this.resourceService.getAllVehicule().subscribe((res:any) => {
+             
+                
+                this.vehiculeList = res.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    checked: item.id === result.vehicule
+                }));
+
+                console.log(this.vehiculeList);
+                
+            })
+
+        })
+    }
+
+    getPlanification(id) {
+        this.planificationService.getPlanificationDemande(id).subscribe(res => {
+            console.log();
+
+            this.demande = res
+            this.selectedPriority = this.demande?.demande?.priorite
+
+        })
+    }
+
+    onChangePriority() {
+        console.log(this.selectedPriority);
+
+        this.planificationService.updatePeriority(this.demande.demande.id, this.selectedPriority).subscribe(res => {
+            this.message.success("Preiority updated")
+
+        })
+
+    }
+
+
+    handleChangeVehicule(id:any){
+       this.vehiculeID=id
+    }
+    handleChangeEquipe(id:any){
+        console.log(id);
+        
+        this.equipeID=id
+     }
+     handleChangeEquipement(id:any){
+        this.equipementID=id
+     }
+
+     updateEquipe(){
+        this.planificationService.updateEquipe(this.id,this.equipeID).subscribe(res=>{
+            this.getEquipeList()
+            this.message.success("Added successfully")
+        })
+     }
+
+     
+     updateEquipement(){
+        this.planificationService.updateEquipement(this.id,this.equipementID).subscribe(res=>{
+            this.getEquipementList()
+            this.message.success("Added successfully")
+        })
+     }
+
+     
+     updateVehicule(){
+        this.planificationService.updateVehicule(this.id,this.vehiculeID).subscribe(res=>{
+            this.getVehiculeList()
+            this.message.success("Added successfully")
+        })
+     }
 }

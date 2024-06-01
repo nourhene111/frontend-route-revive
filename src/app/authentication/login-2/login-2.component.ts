@@ -17,21 +17,24 @@ export class Login2Component {
             this.loginForm.controls[ i ].markAsDirty();
             this.loginForm.controls[ i ].updateValueAndValidity();
         }
-
+        if(this.loginForm.valid){
         this.authenticationService.login(this.loginForm.value.email,this.loginForm.value.password).subscribe(res=>{
              
             
-            this.router.navigate(['/dashboard/default'])
+            this.router.navigate(['/apps/demande-list'])
             
         },((error)=>{
              this.message.error(error.error)
         }))
     }
-
+    }
     constructor( private message: NzMessageService,private fb: FormBuilder,private authenticationService:AuthenticationService,private router:Router) {
     }
 
     ngOnInit(): void {
+     if(localStorage.getItem('token')){
+        this.router.navigate(['/apps/demande-list'])
+     }   
         this.loginForm = this.fb.group({
             email: [ null, [ Validators.required ] ],
             password: [ null, [ Validators.required ] ]

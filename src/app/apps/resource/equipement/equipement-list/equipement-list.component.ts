@@ -58,10 +58,17 @@ export class EquipementListComponent implements OnInit {
   }
 
   submitForm() {
+    for (const i in this.equipementForm.controls) {
+      this.equipementForm.controls[ i ].markAsDirty();
+      this.equipementForm.controls[ i ].updateValueAndValidity();
+  
+  }
+  if(this.equipementForm.valid){
     this.resourceService.createEquipement(this.equipementForm.value).subscribe(res => {
       this.message.success('Equipement create Successfully')
       this.getEquipementList()
       this.modalService.closeAll()
     })
   }
+}
 }    

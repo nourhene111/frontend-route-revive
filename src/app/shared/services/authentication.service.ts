@@ -11,17 +11,16 @@ const USER_AUTH_API_URL = '/api-url';
 
 @Injectable()
 export class AuthenticationService {
-    private currentUserSubject: BehaviorSubject<any>;
-    private roleSubject: BehaviorSubject<any>;
-    public currentUser: Observable<any>;
+    currentUserSubject: BehaviorSubject<any>;
+    roleSubject: BehaviorSubject<any>;
+    currentUser: Observable<any>;
     isLogged: boolean = false;
 
     constructor(private http: HttpClient) {
 
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+        this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
         this.roleSubject = new BehaviorSubject<String>("");
 
-        this.currentUser = this.currentUserSubject.asObservable();
         this.initializeFromToken()
 
     }
@@ -29,7 +28,7 @@ export class AuthenticationService {
         let token = localStorage.getItem('token');
         if (token) {
             const data:any=jwtDecode(token);
-            this. currentUserSubject.next({id:data.id,name:data.name,email:data.email})   
+            this. currentUserSubject.next({id:data.id,name:data.name,email:data.email,role:data.role})   
             this.roleSubject.next(data.role)
             this.isLogged = true;
         }
@@ -48,6 +47,7 @@ export class AuthenticationService {
                
 
                 if (res) {
+                    localStorage.setItem('role',res.role)
                     localStorage.setItem('token', res.accessToken);
                     const decoded = jwtDecode(res.accessToken);
                       const data:any=jwtDecode(res.accessToken);
@@ -76,8 +76,10 @@ export class AuthenticationService {
         return this.roleSubject.asObservable()
     }
     getCurrentUserValue(){
-        return this.currentUserSubject.value()
+        return this.currentUserSubject.asObservable()
     }
+
+ 
 }
 
  

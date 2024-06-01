@@ -73,12 +73,18 @@ export class EquipeListComponent implements OnInit {
     })
   }
   submitForm() {
+    for (const i in this.equipeForm.controls) {
+      this.equipeForm.controls[ i ].markAsDirty();
+      this.equipeForm.controls[ i ].updateValueAndValidity();
+  
+  }
+  if(this.equipeForm.valid){
     this.resourceService.createEquipe(this.equipeForm.value).subscribe(res => {
       this.message.success('Equipe create Successfully')
       this.getEquipeList()
       this.modalService.closeAll()
     })
   }
-
+  }
   
 }    
